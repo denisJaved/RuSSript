@@ -29,13 +29,14 @@ $filters.builtin = (i) => {
             .replace("разное", "!=")
 
             .replace("эу", "document")        // HTML
-            .replace("вычислиПоСчётчеку", "getElementById")
+            .replace("вычислиПоСчётчику", "getElementById")
             .replace("вычислиПоКлассу", "getElementsByClassName")
             .replace("вычислиПоТэгу", "getElementsByTagaAme")
 
-            .replace("КРИКНИ!", "alert")
+            .replace("КРИКНИ", "alert")
             .replace("УВЕРЕН?!", "confirm")
             .replace("УВЕРЕН!?", "confirm")
+            .replace(" пж", ";")
 }
 
 
@@ -45,10 +46,13 @@ scripts = [].slice.call(document.getElementsByTagName("russript"));
 console.log("  %c PARSER %c %c INFO %c   Found " + scripts.length + " RuSSript scripts", "background: purple; border-radius: 5px;", "", "background: green; border-radius: 5px;", "");
 scripts.forEach(element => {
     element.style.display = "none";
-    parse(element);
 });
+setTimeout(() => {
+    scripts.forEach(element => {
+        parse(element);
+    });
+}, 15);
 function parse(script) {
-    let line = 0;
     let t = script.innerText.split("\n");
     let filter = $filters.builtin;
     if (script.getAttribute("dict")) {
@@ -67,17 +71,12 @@ function parse(script) {
         console.error("%c PARSER %c %c FATAL %c  Программист не достаточно вежлив", "background: purple; border-radius: 5px;", "", "background: green; border-radius: 5px;", "");
         return
     }
-    t.forEach((_line) => {
-        if (line != 0 && line != last) {
-            pp = _line;
-            if (!_line.endsWith(" пж")) {
-                console.error("%c PARSER %c %c FATAL %c  Программист не достаточно вежлив", "background: purple; border-radius: 5px;", "", "background: green; border-radius: 5px;", "");
-                return
-            }
-            pp = pp.replace(" пж", ";")
-            pp = filter(pp)
-            eval(pp);
-        }
-        line++;
-    });
+    let p = "";
+    t[0] = "";
+    t[t.length - 1] = "";
+    t.forEach((l) => {
+        p += filter(l) + "\n";
+    })
+    console.log(p);
+    eval(p)
 }
