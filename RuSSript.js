@@ -1,3 +1,12 @@
+// https://cdn.jsdelivr.net/gh/denisJaved/RuSSript@release/RuSSript.js
+console.log("  %c PARSER %c %c INFO %c   Creating filters", "background: purple; border-radius: 5px;", "", "background: green; border-radius: 5px;", "");
+let filters = {};
+filters.devtools = (i) => {
+    return i.replace("девтулсы",    "console")
+            .replace("простоТекст", "log")
+            .replace("покричи",     "warn")
+            .replace("хуйня",       "error");
+}
 console.log("  %c PARSER %c %c INFO %c   Gathering scripts", "background: purple; border-radius: 5px;", "", "background: green; border-radius: 5px;", "");
 scripts = [].slice.call(document.getElementsByTagName("russript"));
 console.log("  %c PARSER %c %c INFO %c   Found " + scripts.length + " RuSSript scripts", "background: purple; border-radius: 5px;", "", "background: green; border-radius: 5px;", "");
@@ -28,7 +37,7 @@ function parse(script) {
                 console.error("%c PARSER %c %c FATAL %c  Программист не достаточно вежлив", "background: purple; border-radius: 5px;", "", "background: green; border-radius: 5px;", "");
                 return
             }
-            pp = pp.replace(" пж", ";");
+            pp = filters.devtools(pp.replace(" пж", ";"))
             eval(pp);
         }
         line++;
